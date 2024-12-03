@@ -6,3 +6,6 @@ command: command_shell.c
 
 run:
 	./command_shell
+
+clean:
+	rm -f command_shell

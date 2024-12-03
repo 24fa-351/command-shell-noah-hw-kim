@@ -5,5 +5,6 @@
 #include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #endif // COMMAND_SHELL_H
