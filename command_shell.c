@@ -2,6 +2,66 @@
 
 int main(int argc, char *argv[])
 {
+    char user_input[1024];
+    char cwd[1024];
+
+    while (strcmp(user_input, "exit") != 0 && strcmp(user_input, "quit") != 0)
+    {
+        printf("Enter a command: ");
+        fgets(user_input, 1024, stdin);
+        user_input[strlen(user_input) - 1] = '\0';
+
+        if (strcmp(user_input, "pwd") == 0)
+        {
+            if (getcwd(cwd, sizeof(cwd)) != NULL)
+            {
+                fprintf(stdout, "Current working dir: %s\n", cwd);
+            }
+            else
+            {
+                perror("getcwd() error");
+                return 1;
+            }
+        }
+        else if (strcmp(user_input, "cd..") == 0)
+        {
+            chdir("..");
+        }
+        else if (strcmp(user_input, "cd") == 0)
+        {
+            chdir(getenv("HOME"));
+        }
+        else if (strncmp(user_input, "set" , 3) == 0)
+        {
+            char *env_var = strtok(user_input, " ");
+            char *env_val = strtok(NULL, " ");
+            setenv(env_var, env_val, 1);
+        }
+
+
+        else
+        {
+            system(user_input);
+        }
+        printf(getcwd(cwd, sizeof(cwd)) != NULL ? "Current working dir: %s\n" : "getcwd() error\n", cwd);
+    }
+
+    // char cwd[1024];
+
+    // if (getcwd(cwd, sizeof(cwd)) != NULL)
+    // {
+    //     fprintf(stdout, "Current working dir: %s\n", cwd);
+    // }
+    // else
+    // {
+    //     perror("getcwd() error");
+    //     return 1;
+    // }
+
+    printf("Exiting shell...\n");
+
+    return 0;
+
     // int fds[2];
     // pipe(fds);
     // pid_t pid = fork();
@@ -29,26 +89,4 @@ int main(int argc, char *argv[])
     // int status;
     // pid_t wpid = waitpid(pid, &status, 0);
     // return wpid == pid && WIFEXITED(status) ? WEXITSTATUS(status) : -1;
-    char *path = getenv("PATH");
-    char *token;
-    char *delimeter = ":";
-
-    if (path == NULL)
-    {
-        printf("PATH not found\n");
-        return 1;
-    }
-
-    char *path_copy = strdup(path);
-    token = strtok(path_copy, delimeter);
-
-    while (token != NULL)
-    {
-        printf("PATH: %s\n", token);
-        token = strtok(NULL, delimeter);
-    }
-
-    free(path_copy);
-
-    return 0;
 }
