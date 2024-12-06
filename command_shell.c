@@ -264,6 +264,7 @@ int main(int argc, char *argv[])
         char *args = tokens[1];
         char *expanded_args = expand_variables(args);
         char *absolute_path = find_cmd(cmd, paths);
+
         if (absolute_path == NULL)
         {
             printf("Command not found\n");
@@ -281,7 +282,6 @@ int main(int argc, char *argv[])
                 perror("execve failed");
             }
             free(absolute_path);
-            free(expanded_args);
             exit(1);
         }
         else if (pid < 0)
@@ -290,10 +290,11 @@ int main(int argc, char *argv[])
         }
         else
         {
-            waitpid(pid, NULL, 0);
+            wait(NULL);
         }
         deallocate_tokens(tokens);
         free(expanded_args);
+        free(absolute_path);
     }
 
     printf("Exiting shell...\n");
